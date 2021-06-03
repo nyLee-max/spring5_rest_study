@@ -17,8 +17,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import spring5_rest_study.config.ContextRoot;
-import spring5_rest_study.config.controller.ListCommand;
 import spring5_rest_study.dto.Member;
+import spring5_rest_study.mapper.MemberMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { ContextRoot.class })
@@ -27,7 +27,7 @@ import spring5_rest_study.dto.Member;
 public class MemberMapperTest {
 
 	protected static final Log log = LogFactory.getLog(MemberMapperTest.class);
-
+ 
 	@Autowired
 	private MemberMapper mapper;
 		
@@ -38,9 +38,9 @@ public class MemberMapperTest {
 	
 
 	@Test
-	public void test1SelectMemberAll() {
+	public void test1SelectMemberByAll() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
-		List<Member> list = mapper.selectMemberAll();
+		List<Member> list = mapper.selectMemberByAll();
 		Assert.assertNotNull(list);
 		
 		list.forEach(s->log.debug(s.toString()));
@@ -49,7 +49,7 @@ public class MemberMapperTest {
 	@Test
 	public void test2InsertMember() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
-		Member newMember = new Member("test20@test.co.kr", "1111", "test20");
+		Member newMember = new Member("test300@test.co.kr", "2222", "테스트300");
 		
 		int res = mapper.insertMember(newMember);
 		Assert.assertEquals(1, res);
@@ -59,7 +59,7 @@ public class MemberMapperTest {
 	public void test3SelectMemberById() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		
-		Member member = mapper.selectMemberById(2);
+		Member member = mapper.selectMemberById((long) 2);
 		Assert.assertNotNull(member);
 		
 		log.debug(member.toString());
@@ -68,22 +68,27 @@ public class MemberMapperTest {
 	@Test
 	public void test4UpdateMember() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
-
-		Member newMember = new Member("test20@test.co.kr", "2222", "테스트20");
+		Member newMember = new Member("test400@test.co.kr", "1111", "test400");
+		mapper.insertMember(newMember);
 		
+		newMember.setPassword("2222");
 		int res = mapper.updateMember(newMember);
 		Assert.assertEquals(1, res);
+		
+		mapper.deleteMember(newMember.getId());
 	}
 
 	@Test
 	public void test5DeleteMember() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		
-		Member newMember = new Member("test20@test.co.kr", "2222", "테스트20");
-		int res = mapper.deleteMember(newMember);
+		Member newMember = new Member("test500@test.co.kr", "2222","테스트500");
+		mapper.insertMember(newMember);
+		
+		int res = mapper.deleteMember(newMember.getId());
 		Assert.assertEquals(1, res);
+	
+
+
 	}
-
-
-
 }

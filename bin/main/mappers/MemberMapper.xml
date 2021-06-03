@@ -8,7 +8,7 @@
 		<result column="regdate" property="registerDateTime" />
 	</resultMap>
 
-	<select id="selectMemberAll" resultMap="resMember">
+	<select id="selectMemberByAll" resultMap="resMember">
 		SELECT id, email,
 		password, name, regdate
 		FROM member
@@ -25,6 +25,9 @@
 		insert
 		into member (email, password, name, regdate)
 		values (#{email}, #{password}, #{name}, now())
+		<selectKey keyProperty="id" resultType="Long">
+		    SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
 
 	<update id="updateMember">
@@ -36,7 +39,7 @@
 	<delete id="deleteMember">
 		delete
 		from member
-		where email=#{email}
+		where id=#{id}
 	</delete>
 
 </mapper>

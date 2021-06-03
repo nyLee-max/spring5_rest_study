@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spring5_rest_study.mapper.EmployeeMapper">
+
+	<resultMap type="Employee" id="resEmployee">
+		<id property="empNo" column="manager_no" />
+		<result property="empName" column="manager_name" />
+	</resultMap>
+
+	<resultMap type="Title" id="resTitle">
+		<id property="titleNo" column="title_no" />
+		<result property="titleName" column="title_name" />
+	</resultMap>
+
+	<resultMap type="Department" id="resDepartment">
+		<id property="deptno" column="deptNo" />
+		<result property="deptName" column="deptName" />
+		<result property="floor" column="column" />
+	</resultMap>
+
+	<resultMap type="Employee" id="AssociationAll">
+		<id property="empNo" column="empno" />
+		<result property="empName" column="empname" />
+		<result property="salary" column="salary" />
+		<association property="title" resultMap="resTitle"/>
+		<association property="manager" resultMap="resEmployee"/>
+		<association property="dept" resultMap="resDepartment"/>
+	</resultMap>
+
+	<sql id="selectSQl">
+		select e.empno,
+		e.empname,
+		t.titleno as title_no,
+		t.titleName
+		as title_name,
+		e.manager as manager_no,
+		m.empname as manager_name,
+		e.salary,
+		d.deptNo,
+		d.deptName,
+		d.floor
+		from employee e join title t on
+		e.title=t.titleno
+		left join employee m on e.manager =m.empno
+		join
+		department d on e.dept = d.deptNo
+	</sql>
+
+	<select id="getLists" resultMap="AssociationAll">
+		<include refid="selectSQl"></include>
+	</select>
+
+	<select id="getEmployee" parameterType="int"
+		resultMap="AssociationAll">
+		select e.empno,
+		e.empname,
+		t.titleno as title_no,
+		t.titleName as title_name,
+		e.manager as manager_no,
+		m.empname as manager_name,
+		e.salary,
+		d.deptNo,
+		d.deptName,
+		d.floor
+		from employee e join title t on e.title=t.titleno
+		left join employee m on e.manager =m.empno
+		join department d on e.dept = d.deptNo
+		where e.empno = #{empNo}
+	</select>
+
+	<insert id="registerEmployee" parameterType="Employee">
+		insert into
+		employee(empno, empname, title, manager, salary, dept)
+		values
+		(#{empNo}, #{empName}, #{title.titleNo}, #{manager.empNo}, #{salary},
+		#{dept.deptno})
+	</insert>
+
+	<update id="modifyEmployee" parameterType="Employee">
+		update employee
+		set
+		empname = #{empName}, title = #{title.titleNo}, manager = #{manager.empNo},
+		salary=#{salary}, dept=#{dept.deptno}
+		where empno = #{empNo}
+	</update>
+
+	<delete id="removeEmployee" parameterType="Employee">
+		delete from employee
+		where empno = #{empNo}
+	</delete>
+</mapper>

@@ -8,16 +8,31 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import spring5_rest_study.config.exception.WrongIdPasswordException;
 
 
-@JsonIgnoreProperties({"password"})
+//@JsonIgnoreProperties({"password"})
 public class Member {
 	private Long id;
 	private String email;
-	@JsonIgnore
+//	@JsonIgnore
 	private String password;
 	private String name;
 //	@JsonFormat(pattern = "yyyyMMddHHmmss")
 	private LocalDateTime registerDateTime;
 	
+	public Member() {
+	}
+	
+	
+
+	public Member(Long id, String email, String password, String name) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+	}
+
+
+
 	public Member(Long id, String email, String password, String name, LocalDateTime registerDateTime) {
 		this.id = id;
 		this.email = email;
